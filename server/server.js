@@ -1,11 +1,13 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
+
 
 app.use(bodyParser.json());
 
@@ -27,6 +29,37 @@ app.get('/todos', (req, res) => {
             todos});
     }, (e) => {
         res.status(400).res.send(e);
+    });
+});
+
+//GET /todos/12341234
+app.get('/todos/:id', (req,res) => {
+    var id = req.params.id;
+    // res.send(req.params);
+    //validate ID using isValid
+        //if not valid, respond with 404 - send back empty body
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send('That is not a valid ID');
+    };
+
+    //query db with findById
+    //success
+    Todo.findById(id).then((todo) => {
+        //if todo - send it back
+        if (!todo) {
+            //if no todo - call succeed but no id - send back 404 with empty body
+            return res.status(404).send('Could not find your todo!')
+        };
+
+        res.status(200).send(JSON.stringify([todo.text, todo.completedAt], undefined, 2));
+        //the following will also work!
+        // res.send({todo});
+    }, (e) => {
+        //error
+        //400 - and send empty body back
+        return res.send('Something went wrong...')
+    }).catch((e) => {
+        res.status(400).send();
     });
 });
 
