@@ -120,6 +120,22 @@ app.patch('/todos/:id', (req, res) => {
     });
 });
 
+//POST to /users so we can add a new user
+// pass 'picked' email and password
+
+app.post('/users', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    var user = new User(body);
+
+    user.save().then(() => {
+        return user.generateAuthToken();
+        // res.send(user);
+    }).then((token) => {
+        res.header('x-auth').send(user)
+    }).catch((e) => {
+        res.status(400).send();
+    });
+});
 
 app.listen(port, () => {
     console.log(`Started up on port ${port}`);
