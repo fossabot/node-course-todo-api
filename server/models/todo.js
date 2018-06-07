@@ -15,6 +15,10 @@ var Todo = mongoose.model('Todo', {
         type: Number,
         required: false,
         default: null
+    },
+    assigned: {
+        type: String,
+        trim: true
     }
 });
 
