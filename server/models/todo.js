@@ -16,9 +16,9 @@ var Todo = mongoose.model('Todo', {
         required: false,
         default: null
     },
-    assigned: {
-        type: String,
-        trim: true
+    _creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
     }
 });
 
