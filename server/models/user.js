@@ -30,10 +30,6 @@ var UserSchema = new mongoose.Schema({
             type: String,
             require: true
         }
-    }],
-    drinkExperiences: [{
-        type: ObjectId,
-        ref:"Product"
     }]
 });
 
